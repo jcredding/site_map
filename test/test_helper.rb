@@ -7,6 +7,9 @@ require 'shoulda'
 
 lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(lib_path) unless $LOAD_PATH.include?(lib_path)
-require 'site_map'
 
-# TODO: setup your test environment here
+test_support_path = File.expand_path(File.join(File.dirname(__FILE__), 'support'))
+$LOAD_PATH.unshift(test_support_path) unless $LOAD_PATH.include?(test_support_path)
+Dir.chdir(test_support_path)
+
+require 'site_map'

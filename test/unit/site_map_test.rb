@@ -2,12 +2,10 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class SiteMapTest < Test::Unit::TestCase
 
-  context "An instance of the SiteMap class" do
+  context "SiteMap module" do
+    subject{ SiteMap }
 
-    should "flunk" do
-      flunk "Please provide some tests"
-    end
-    
+    #should_have_class_methods :setup, :define
   end
 
 end
