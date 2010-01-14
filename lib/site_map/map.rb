@@ -3,14 +3,15 @@ module SiteMap
 
   class Map
     include SiteMap::Helpers::Mapping
-    attr_reader :view_nodes, :index_of_nodes
+    ATTRIBUTES = [:view_nodes, :index_of_nodes]
+    ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     def initialize
       @view_nodes = []
       @index_of_nodes = {}
     end
 
-    def index(view_node_index)
+    def find(view_node_index)
       self.index_of_nodes[view_node_index.to_sym]
     end
 

@@ -14,7 +14,7 @@ class ViewNodeTest < Test::Unit::TestCase
     # Test attributes, base respond_to?, not the logic in the methods
     [ SiteMap::ViewNode::ATTRIBUTES,
       [ :children, :ancestors, :self_and_ancestors, :siblings, :self_and_siblings ],
-      [ :[] ]
+      [ :view_node_params, :[] ]
     ].flatten.each do |attribute|
       should "respond to #{attribute}" do
         assert subject.respond_to?(attribute)
@@ -98,7 +98,7 @@ class ViewNodeTest < Test::Unit::TestCase
         ancestors_should_be = [SiteMap.map.view_nodes.first, SiteMap[:godzilla_about]]
         assert_equal ancestors_should_be, subject.ancestors
       end
-      should "return godzilla group, godzilla_about and about_moviews with self_and_ancestors" do
+      should "return godzilla group, godzilla_about and about_movies with self_and_ancestors" do
         ancestors_should_be = [SiteMap.map.view_nodes.first, SiteMap[:godzilla_about], subject]
         assert_equal ancestors_should_be, subject.self_and_ancestors
       end
