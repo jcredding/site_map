@@ -12,9 +12,7 @@ class SiteMapTest < Test::Unit::TestCase
     end
 
     context "define method" do
-      setup do
-        SiteMap.define{|map| @map = map}
-      end
+      setup{ SiteMap.define{|map| @map = map} }
       subject{ @map }
 
       should "yield it's map to given block" do

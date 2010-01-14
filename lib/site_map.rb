@@ -18,6 +18,10 @@ module SiteMap
     end
   end
 
+  def self.[](view_node_index)
+    self.map.index(view_node_index.to_sym)
+  end
+
   def self.map
     @@map
   end

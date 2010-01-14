@@ -3,11 +3,11 @@ module SiteMap
 
   class ViewNode
     include SiteMap::Helpers::Mapping
-    ATTRIBUTES = [ :view_nodes, :map, :index, :label, :url, :show, :parent_index ]
+    ATTRIBUTES = [ :map, :index, :label, :url, :show, :parent ]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     def initialize(index, map, options={})
-      # raise error if no index or no map
+      raise(ArgumentError, "index and map arguements required") unless index && map
       @index = index
       @map = map
       options.each do |method, value|
@@ -26,35 +26,36 @@ module SiteMap
     def show
       @show ? @show : 'true'
     end
-    def parent_index
-      @parent_index.to_sym if @parent_index
+
+    def add_to_children(view_node)
+      @view_nodes.push(view_node)
     end
 
-    def parent
-      @parent ||= self.map.index(self.parent_index) if self.parent_index
+    def children
+      @view_nodes
     end
     def ancestors
       unless @ancestors
         node, @ancestors = self, []
         @ancestors << node = node.parent while node.parent
+        @ancestors.reverse!
       end
       @ancestors
     end
     def self_and_ancestors
-      @with_ancestors ||= self.ancestors.dup.reverse.push(self)
+      @with_ancestors ||= self.ancestors.dup.push(self)
     end
     def siblings
-      @siblings ||= (self.self_and_siblings - self)
+      @siblings ||= (self.self_and_siblings - [self])
     end
     def self_and_siblings
       @with_siblings ||= self.parent.children
     end
-    alias :children :view_nodes
 
     protected
 
     def view_node_params(new_index, options)
-      @view_node_params ||= [new_index, self.map, options.merge(:parent_index => self.index)]
+      [new_index, self.map, options.merge(:parent => self)]
     end
 
   end

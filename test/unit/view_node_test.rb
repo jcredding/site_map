@@ -3,9 +3,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class ViewNodeTest < Test::Unit::TestCase
 
   context "ViewNode" do
-    setup do
-      @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map)
-    end
+    setup{ @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map) }
     subject{ @view_node }
 
     # Test ancestors or included modules
@@ -15,6 +13,7 @@ class ViewNodeTest < Test::Unit::TestCase
 
     # Test attributes, base respond_to?, not the logic in the methods
     [ SiteMap::ViewNode::ATTRIBUTES,
+      [ :children, :ancestors, :self_and_ancestors, :siblings, :self_and_siblings ],
       [ :[] ]
     ].flatten.each do |attribute|
       should "respond to #{attribute}" do
@@ -23,18 +22,22 @@ class ViewNodeTest < Test::Unit::TestCase
     end
 
     # Test initialize method and attribute method's logic
+    should "raise an ArgumentError when no index or no map is provided" do
+      assert_raises(ArgumentError){ SiteMap::ViewNode.new }
+      assert_raises(ArgumentError){ SiteMap::ViewNode.new(:test_node, nil) }
+      assert_raises(ArgumentError){ SiteMap::ViewNode.new(nil, SiteMap.map) }
+    end
     should "set it's index to :test_node" do
       assert_equal :test_node, subject.index
     end
-    should "set it's view_nodes to an empty array" do
-      assert subject.view_nodes.is_a?(Array)
-      assert subject.view_nodes.empty?
+    should "set it's children (view_nodes) to an empty array" do
+      assert subject.children.is_a?(Array)
+      assert subject.children.empty?
     end
     should "return the value of attributes with [attribute], bypassing reader methods" do
       assert_nil subject[:label]
       assert_nil subject[:url]
       assert_nil subject[:show]
-      assert_nil subject[:parent_index]
     end
     should "return the index as a string" do
       assert_equal subject.index.to_s, subject.label
@@ -49,8 +52,7 @@ class ViewNodeTest < Test::Unit::TestCase
         @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, {
           :label => 'Manually created',
           :url => "'/never/will/work'",
-          :show => "want_to?",
-          :parent_index => 'doesnt_exist'
+          :show => "want_to?"
         })
       end
       subject{ @view_node }
@@ -67,10 +69,41 @@ class ViewNodeTest < Test::Unit::TestCase
       should "set it's map to SiteMap.map" do
         assert_equal SiteMap.map, subject.map
       end
-      should "set it's parent_index to :doesnt_exist" do
-        assert_equal :doesnt_exist, subject.parent_index
+    end
+
+    # Test relationship methods
+    context "from the configured set" do
+      setup{ @view_node = SiteMap[:godzilla_about] }
+      subject{ @view_node }
+
+      should "return godzilla group node with parent" do
+        assert_equal SiteMap.map.view_nodes.first, subject.parent
+      end
+      should "return about_movies and about_monsters with children" do
+        children_should_be = [SiteMap[:about_movies], SiteMap[:about_monsters]]
+        assert_equal children_should_be, subject.children
+      end
+      should "return godzilla_links node with siblings" do
+        assert_equal [SiteMap[:godzilla_links]], subject.siblings
+      end
+      should "return godzilla_links with subject with self_and_siblings" do
+        assert_equal [subject, SiteMap[:godzilla_links]], subject.self_and_siblings
       end
     end
+    context "the about_movies node" do
+      setup{ @view_node = SiteMap[:about_movies] }
+      subject{ @view_node }
+
+      should "return godzilla group and godzilla_about with ancestors" do
+        ancestors_should_be = [SiteMap.map.view_nodes.first, SiteMap[:godzilla_about]]
+        assert_equal ancestors_should_be, subject.ancestors
+      end
+      should "return godzilla group, godzilla_about and about_moviews with self_and_ancestors" do
+        ancestors_should_be = [SiteMap.map.view_nodes.first, SiteMap[:godzilla_about], subject]
+        assert_equal ancestors_should_be, subject.self_and_ancestors
+      end
+    end
+
   end
 
 end
