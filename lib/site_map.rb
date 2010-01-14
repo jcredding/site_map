@@ -18,6 +18,10 @@ module SiteMap
     end
   end
 
+  def self.map
+    @@map
+  end
+
   def self.define(&block)
     yield @@map
   end

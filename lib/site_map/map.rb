@@ -9,6 +9,9 @@ module SiteMap
       @view_nodes = []
     end
 
+    def index(index)
+    end
+
   end
 
 end

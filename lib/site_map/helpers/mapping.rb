@@ -21,7 +21,7 @@ module SiteMap
         when SiteMap::Map
           { :map => self }
         when SiteMap::ViewNode
-          { :map => self.map, :parent_index => self.parent_index }
+          { :map => self.map, :parent_index => self.index }
         else
           {}
         end

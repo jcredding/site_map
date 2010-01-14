@@ -5,7 +5,22 @@ class SiteMapTest < Test::Unit::TestCase
   context "SiteMap module" do
     subject{ SiteMap }
 
-    #should_have_class_methods :setup, :define
+    [:define, :setup].each do |method|
+      should "respond to #{method}" do
+        assert subject.respond_to?(method)
+      end
+    end
+
+    context "define method" do
+      setup do
+        SiteMap.define{|map| @map = map}
+      end
+      subject{ @map }
+
+      should "yield it's map to given block" do
+        assert subject.kind_of?(SiteMap::Map)
+      end
+    end
   end
 
 end
