@@ -1,9 +1,12 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class ViewNodeTest < Test::Unit::TestCase
 
   context "ViewNode" do
-    setup{ @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map) }
+    setup do
+      SiteMap.setup
+      @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map)
+    end
     subject{ @view_node }
 
     # Test ancestors or included modules

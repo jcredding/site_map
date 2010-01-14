@@ -7,8 +7,7 @@ module SiteMap
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     def initialize
-      @view_nodes = []
-      @index_of_nodes = {}
+      self.clear_nodes!
     end
 
     def find(view_node_index)
@@ -20,6 +19,11 @@ module SiteMap
     end
     def add_to_index(view_node)
       @index_of_nodes[view_node.index.to_sym] = view_node
+    end
+
+    def clear_nodes!
+      @view_nodes = []
+      @index_of_nodes = {}
     end
 
     # convenience method
