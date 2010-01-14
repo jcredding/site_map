@@ -6,7 +6,7 @@ class MapTest < Test::Unit::TestCase
     setup{ @map = SiteMap.map }
     subject{ @map }
 
-    [:view_nodes, :group, :view].each do |method|
+    [:view_nodes, :group, :view, :index].each do |method|
       should "respond to #{method}" do
         assert subject.respond_to?(method)
       end

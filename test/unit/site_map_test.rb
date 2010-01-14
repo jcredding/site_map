@@ -5,7 +5,7 @@ class SiteMapTest < Test::Unit::TestCase
   context "SiteMap module" do
     subject{ SiteMap }
 
-    [:define, :setup].each do |method|
+    [:define, :setup, :[]].each do |method|
       should "respond to #{method}" do
         assert subject.respond_to?(method)
       end

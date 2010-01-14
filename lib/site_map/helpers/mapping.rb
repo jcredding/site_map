@@ -4,27 +4,15 @@ module SiteMap
     module Mapping
 
       def group(index, options={})
-        view_node = SiteMap::ViewNode.new(index, :group, options.merge(merge_options))
+        view_node = SiteMap::ViewNode.new(*view_node_params(index, options))
         self.view_nodes << view_node
         yield view_node if block_given?
       end
       def view(index, options={})
-        view_node = SiteMap::ViewNode.new(index, :view, options.merge(merge_options))
+        view_node = SiteMap::ViewNode.new(*view_node_params(index, options))
         self.view_nodes << view_node
+        self.map.add_to_index(view_node)
         yield view_node if block_given?
-      end
-
-      protected
-
-      def merge_options
-        case self
-        when SiteMap::Map
-          { :map => self }
-        when SiteMap::ViewNode
-          { :map => self.map, :parent_index => self.index }
-        else
-          {}
-        end
       end
 
     end

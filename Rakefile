@@ -11,12 +11,12 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files = %w(README.rdoc)
   s.rdoc_options     = %w(--main README.rdoc)
   s.summary          = "This gem does ... "
-  s.author           = 'First Last'
-  s.email            = 'user@example.com'
-  s.homepage         = 'http://github.com/__/site_map'
+  s.author           = 'Collin Redding'
+  s.email            = 'TempestTTU@gmail.com'
+  s.homepage         = 'http://github.com/jcredding/site_map'
   s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib}/**/*")
   # s.executables    = ['site_map']
-  
+
   # s.add_dependency('gem_name', '~> 0.0.1')
 end
 
@@ -39,9 +39,9 @@ begin
     t.verbose    = true
     t.rcov_opts  = ['--text-report', "-x #{Gem.path}", '-x /Library/Ruby', '-x /usr/lib/ruby']
   end
-  
+
   task :default => :coverage
-  
+
 rescue LoadError
   warn "\n**** Install rcov (sudo gem install relevance-rcov) to get coverage stats ****\n"
   task :default => :test
@@ -59,5 +59,5 @@ require 'cucumber'
 require 'cucumber/rake/task'
 
 Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "test/features --format pretty" 
+  t.cucumber_opts = "test/features --format pretty"
 end
