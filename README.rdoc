@@ -2,12 +2,28 @@
 
 == Description
 
-Describe your gem here ...
+SiteMap provides a way to model out your site's views in a hierarchal fashion. You configure your views and then it builds a tree structure from it that is easy to lookup specific nodes and also traverse their relationships, such as parent or children.
 
 == Installation
 
     sudo gem install site_map
 
-== Usage
+== Basic Usage
 
-    require 'site_map'
+SiteMap by default looks for "config/site_map.rb" to try and load configurations from. Defining your site map is easy with a syntax similar to Rails routes:
+
+    SiteMap.define do |map|
+      map.view :user
+    end
+
+This creates a single view in your map that can be found with the index :user. Finding view node's is easy as well:
+
+    SiteMap[:user]
+
+If the a view node with the index :user exists in the site map, then it will return it and can be used as needed.
+
+Copyright (c) 2009 John Collin Redding
+See the attached MIT License.
+
+
+

@@ -13,7 +13,6 @@ module SiteMap
       begin
         load file
       rescue LoadError => exception
-        puts "couldn't find file #{file} to load, no site map configuration loaded"
       end
     end
   end
