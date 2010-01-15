@@ -33,8 +33,8 @@ module SiteMap
 
     protected
 
-    def view_node_params(index, options)
-      [index, self, options]
+    def view_node_params(index, type, options)
+      [index, self, type, options]
     end
 
   end

@@ -5,7 +5,7 @@ class ViewNodeTest < Test::Unit::TestCase
   context "ViewNode" do
     setup do
       SiteMap.setup
-      @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map)
+      @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, :view)
     end
     subject{ @view_node }
 
@@ -16,6 +16,7 @@ class ViewNodeTest < Test::Unit::TestCase
 
     # Test attributes, base respond_to?, not the logic in the methods
     [ SiteMap::ViewNode::ATTRIBUTES,
+      [ :view?, :group? ],
       [ :children, :ancestors, :self_and_ancestors, :siblings, :self_and_siblings ],
       [ :view_node_params, :[] ]
     ].flatten.each do |attribute|
@@ -25,10 +26,8 @@ class ViewNodeTest < Test::Unit::TestCase
     end
 
     # Test initialize method and attribute method's logic
-    should "raise an ArgumentError when no index or no map is provided" do
+    should "raise an ArgumentError when no index, map or type is provided" do
       assert_raises(ArgumentError){ SiteMap::ViewNode.new }
-      assert_raises(ArgumentError){ SiteMap::ViewNode.new(:test_node, nil) }
-      assert_raises(ArgumentError){ SiteMap::ViewNode.new(nil, SiteMap.map) }
     end
     should "set it's index to :test_node" do
       assert_equal :test_node, subject.index
@@ -52,7 +51,7 @@ class ViewNodeTest < Test::Unit::TestCase
     # Test initialize method with attributes being set
     context "initialized with options" do
       setup do
-        @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, {
+        @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, :view, {
           :label => 'Manually created',
           :url => "'/never/will/work'",
           :visible => "want_to?"
@@ -71,6 +70,9 @@ class ViewNodeTest < Test::Unit::TestCase
       end
       should "set it's map to SiteMap.map" do
         assert_equal SiteMap.map, subject.map
+      end
+      should "return true with view?" do
+        assert subject.view?
       end
     end
 
@@ -104,6 +106,17 @@ class ViewNodeTest < Test::Unit::TestCase
       should "return godzilla group, godzilla_about and about_movies with self_and_ancestors" do
         ancestors_should_be = [SiteMap.map.view_nodes.first, SiteMap[:godzilla_about], subject]
         assert_equal ancestors_should_be, subject.self_and_ancestors
+      end
+    end
+    context "group from the configured set" do
+      setup{ @view_node = SiteMap.view_nodes.first }
+      subject{ @view_node }
+
+      should "return true with group?" do
+        assert subject.group?
+      end
+      should "return it's first child's url for it's url" do
+        assert_equal subject.children.first.url, subject.url
       end
     end
 

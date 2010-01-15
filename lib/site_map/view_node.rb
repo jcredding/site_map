@@ -3,13 +3,16 @@ module SiteMap
 
   class ViewNode
     include SiteMap::Helpers::Mapping
-    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :parent ]
+    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :parent, :type ]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
-    def initialize(index, map, options={})
-      raise(ArgumentError, "index and map arguements required") unless index && map
+    TYPES = [ :view, :group ]
+
+    def initialize(index, map, type, options={})
+      raise(ArgumentError, "index, map and type arguements required") unless index && map && type
       @index = index
       @map = map
+      @type = type
       options.each do |method, value|
         instance_variable_set("@#{method}", value)
       end
@@ -22,6 +25,13 @@ module SiteMap
 
     def label
       @label ? @label : @index.to_s
+    end
+    def url
+      if !@url && self.group?
+        self.children.empty? ? @url : self.children.first.url
+      else
+        @url
+      end
     end
     def visible
       @visible ? @visible : 'true'
@@ -52,10 +62,14 @@ module SiteMap
       @with_siblings ||= self.parent.children
     end
 
+    TYPES.each do |type|
+      self.send(:define_method, "#{type}?", lambda{ self.type == type })
+    end
+
     protected
 
-    def view_node_params(new_index, options)
-      [new_index, self.map, options.merge(:parent => self)]
+    def view_node_params(new_index, type, options)
+      [new_index, self.map, type, options.merge(:parent => self)]
     end
 
   end

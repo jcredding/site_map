@@ -22,7 +22,7 @@ This creates a single view in your map that can be found with the index :user. F
 
 If the a view node with the index :user exists in the site map, then it will return it and can be used as needed.
 
-Copyright (c) 2009 John Collin Redding
+Copyright (c) 2010 John Collin Redding
 See the attached MIT License.
 
 
