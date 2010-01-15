@@ -38,16 +38,16 @@ class SiteMapTest < Test::Unit::TestCase
     subject{ SiteMap }
 
     should "contain users site map configuration" do
-      view_node = SiteMap[:users_list]
+      view_node = SiteMap[:users__index]
       assert view_node
       user_group_node = SiteMap.view_nodes.detect{|vn| vn.index == :users}
       assert_equal user_group_node, view_node.parent
-      assert_equal [SiteMap[:user]], view_node.children
-      view_node = SiteMap[:messages_list]
+      assert_equal [SiteMap[:users__show]], view_node.children
+      view_node = SiteMap[:messages__index]
       assert view_node
       message_group_node = SiteMap.view_nodes.detect{|vn| vn.index == :messages}
       assert_equal message_group_node, view_node.parent
-      assert_equal [SiteMap[:message]], view_node.children
+      assert_equal [SiteMap[:messages__show]], view_node.children
     end
   end
 
