@@ -40,13 +40,13 @@ class ViewNodeTest < Test::Unit::TestCase
     should "return the value of attributes with [attribute], bypassing reader methods" do
       assert_nil subject[:label]
       assert_nil subject[:url]
-      assert_nil subject[:show]
+      assert_nil subject[:visible]
     end
     should "return the index as a string" do
       assert_equal subject.index.to_s, subject.label
     end
-    should "return 'true' with show" do
-      assert_equal 'true', subject.show
+    should "return 'true' with visible" do
+      assert_equal 'true', subject.visible
     end
 
     # Test initialize method with attributes being set
@@ -55,7 +55,7 @@ class ViewNodeTest < Test::Unit::TestCase
         @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, {
           :label => 'Manually created',
           :url => "'/never/will/work'",
-          :show => "want_to?"
+          :visible => "want_to?"
         })
       end
       subject{ @view_node }
@@ -66,8 +66,8 @@ class ViewNodeTest < Test::Unit::TestCase
       should "set it's url to \"'/never/will/work'\"" do
         assert_equal "'/never/will/work'", subject.url
       end
-      should "set it's show to 'want_to?'" do
-        assert_equal 'want_to?', subject.show
+      should "set it's visible to 'want_to?'" do
+        assert_equal 'want_to?', subject.visible
       end
       should "set it's map to SiteMap.map" do
         assert_equal SiteMap.map, subject.map

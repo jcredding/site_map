@@ -3,7 +3,7 @@ module SiteMap
 
   class ViewNode
     include SiteMap::Helpers::Mapping
-    ATTRIBUTES = [ :map, :index, :label, :url, :show, :parent ]
+    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :parent ]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     def initialize(index, map, options={})
@@ -23,8 +23,8 @@ module SiteMap
     def label
       @label ? @label : @index.to_s
     end
-    def show
-      @show ? @show : 'true'
+    def visible
+      @visible ? @visible : 'true'
     end
 
     def add_to_children(view_node)
