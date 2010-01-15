@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'functional_test_helper')
+require File.join('test', 'functional_test_helper')
 
 # configure site_map to use the multiple files for configuration
 files_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'support', 'config', 'site_map', '*.rb'))

@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require File.join('test', 'test_helper')
 
 class SiteMapTest < Test::Unit::TestCase
 

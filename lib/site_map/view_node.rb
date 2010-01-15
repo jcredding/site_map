@@ -66,6 +66,13 @@ module SiteMap
       self.send(:define_method, "#{type}?", lambda{ self.type == type })
     end
 
+    def inspect
+      attributes_string = [:index, :type, :label, :url, :visible].collect do |attribute|
+        "#{attribute}: #{self.send(attribute).inspect}"
+      end.join(", ")
+      "#<#{self.class} #{attributes_string}>"
+    end
+
     protected
 
     def view_node_params(new_index, type, options)

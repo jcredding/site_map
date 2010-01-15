@@ -31,6 +31,10 @@ module SiteMap
       self
     end
 
+    def inspect
+      "#<#{self.class}>"
+    end
+
     protected
 
     def view_node_params(index, type, options)

@@ -1,4 +1,4 @@
-require 'test_helper'
+require File.join('test', 'test_helper')
 
 require 'active_support'
 require 'action_controller'
