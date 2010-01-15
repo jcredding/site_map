@@ -119,6 +119,19 @@ class ViewNodeTest < Test::Unit::TestCase
         assert_equal subject.children.first.url, subject.url
       end
     end
+    context "alias from the configured set" do
+      setup{ @view_node = SiteMap[:godzilla_urls] }
+      subject{ @view_node }
+
+      should "should be the same as godzilla_links" do
+        assert_equal SiteMap[:godzilla_links], @view_node
+      end
+      should "raise non existant view node exception" do
+        assert_raises(SiteMap::Exceptions::NonExistantViewNode) do
+          SiteMap.define{|map| map.alias(:wont_work, :doesnt_exist) }
+        end
+      end
+    end
 
   end
 

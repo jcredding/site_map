@@ -17,8 +17,8 @@ module SiteMap
     def add_to_children(view_node)
       @view_nodes.push(view_node)
     end
-    def add_to_index(view_node)
-      @index_of_nodes[view_node.index.to_sym] = view_node
+    def add_to_index(index, view_node)
+      @index_of_nodes[index.to_sym] = view_node
     end
 
     def clear_nodes!

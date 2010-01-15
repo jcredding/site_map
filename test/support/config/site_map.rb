@@ -5,5 +5,6 @@ SiteMap.define do |map|
       about.view :about_monsters, :url => "'/godzilla/about/monsters'"
     end
     godzilla.view :godzilla_links, :url => "'/godzilla/links'"
+    godzilla.alias :godzilla_urls, :godzilla_links
   end
 end
