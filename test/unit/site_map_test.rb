@@ -37,6 +37,26 @@ class SiteMapTest < Test::Unit::TestCase
     end
     subject{ SiteMap }
 
+    # check member / collection methods defining
+    [ [:index, [:new, :create]],
+      [:show, [:edit, :update, :destroy]]
+    ].each do |action_and_alias|
+      action_and_alias.flatten.each do |action|
+        should "define 'users__#{action}' indexed node" do
+          action_index = "users__#{action}".to_sym
+          assert (view_node = SiteMap[action_index])
+        end
+      end
+      action_and_alias.last.each do |action|
+        should "should return the 'users__#{action_and_alias.first}' with 'users__#{action}'" do
+          action_index = "users__#{action}".to_sym
+          assert (view_node = SiteMap[action_index])
+          assert_not_equal action_index, view_node.index
+          assert_equal "users__#{action_and_alias.first}".to_sym, view_node.index
+        end
+      end
+    end
+
     should "contain users site map configuration" do
       view_node = SiteMap[:users__index]
       assert view_node
