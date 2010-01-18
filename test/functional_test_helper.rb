@@ -1,6 +1,5 @@
 require File.join('test', 'test_helper')
 
-require 'active_support'
 require 'action_controller'
 require 'action_controller/test_case'
 require 'action_controller/test_process'

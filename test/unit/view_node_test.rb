@@ -132,6 +132,44 @@ class ViewNodeTest < Test::Unit::TestCase
         end
       end
     end
+    context "from the multiple file set testing smart defaults" do
+      setup do
+        files_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'support', 'config', 'site_map', '*.rb'))
+        files = Dir[files_path].sort
+        SiteMap.setup(files)
+      end
+
+      context "messages group node" do
+        setup do
+          @view_node = SiteMap.view_nodes.detect{|n| n.index == :messages }
+        end
+        subject{ @view_node }
+
+        should "return 'Messages' with label" do
+          assert_equal(subject.index.to_s.titleize, subject.label)
+        end
+      end
+      context "messages index node" do
+        setup do
+          @view_node = SiteMap[:messages__index]
+        end
+        subject{ @view_node }
+
+        should "return 'Messages List' with label" do
+          assert_equal("#{subject.resource.to_s.titleize} List", subject.label)
+        end
+      end
+      context "messages show node" do
+        setup do
+          @view_node = SiteMap[:messages__show]
+        end
+        subject{ @view_node }
+
+        should "return ':message_name' with label" do
+          assert_equal(":#{subject.resource.to_s.singularize}_name", subject.label)
+        end
+      end
+    end
   end
 
 end

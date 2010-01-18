@@ -3,7 +3,7 @@ module SiteMap
 
   class ViewNode
     include SiteMap::Helpers::Mapping
-    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :parent, :type ]
+    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :resource, :parent, :type ]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     TYPES = [ :view, :group ]
@@ -24,7 +24,7 @@ module SiteMap
     end
 
     def label
-      @label ? @label : @index.to_s
+      @label ? @label : self.default_label
     end
     def url
       if !@url && self.group?
@@ -74,6 +74,21 @@ module SiteMap
     end
 
     protected
+
+    def default_label
+      case(@type)
+      when :group
+        @index.to_s.respond_to?(:titleize) ? @index.to_s.titleize : @index.to_s
+      when :collection
+        titled_resource = @resource.to_s.respond_to?(:titleize) ? @resource.to_s.titleize : @resource.to_s
+        "#{titled_resource} List"
+      when :member
+        single_resource = @resource.to_s.respond_to?(:singularize) ? @resource.to_s.singularize : @resource.to_s
+        ":#{single_resource}_name"
+      else
+        @index.to_s
+      end
+    end
 
     def view_node_params(new_index, type, options)
       [new_index, self.map, type, options.merge(:parent => self)]

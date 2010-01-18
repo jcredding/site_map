@@ -21,7 +21,7 @@ module SiteMap
       def collection(resource, options={})
         base_index = "#{resource}__:action"
         new_index = base_index.gsub(':action', 'index').to_sym
-        view_node = self.add_node(new_index, :view, options)
+        view_node = self.add_node(new_index, :collection, options.merge({:resource => resource}))
         [:new, :create].each do |action|
           action_index = base_index.gsub(':action', action.to_s).to_sym
           view_node.alias(action_index, new_index)
@@ -31,7 +31,7 @@ module SiteMap
       def member(resource, options={})
         base_index = "#{resource}__:action"
         new_index = base_index.gsub(':action', 'show').to_sym
-        view_node = self.add_node(new_index, :view, options)
+        view_node = self.add_node(new_index, :member, options.merge({:resource => resource}))
         [:edit, :update, :destroy].each do |action|
           action_index = base_index.gsub(':action', action.to_s).to_sym
           view_node.alias(action_index, new_index)

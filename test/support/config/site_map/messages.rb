@@ -1,7 +1,7 @@
 SiteMap.define do |map|
   map.group :messages do |messages|
-    messages.view :messages__index, :label => 'Message List', :url => '/messages/list' do |list|
-      list.view :messages__show, :label => 'Message', :url => '/messages/1'
+    messages.collection :messages do |list|
+      list.member :messages
     end
   end
 end
