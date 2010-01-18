@@ -141,7 +141,7 @@ class ViewNodeTest < Test::Unit::TestCase
 
       context "messages group node" do
         setup do
-          @view_node = SiteMap.view_nodes.detect{|n| n.index == :messages }
+          @view_node = SiteMap.view_nodes.detect{|n| n.index == :project }
         end
         subject{ @view_node }
 
@@ -158,6 +158,9 @@ class ViewNodeTest < Test::Unit::TestCase
         should "return 'Messages List' with label" do
           assert_equal("#{subject.resource.to_s.titleize} List", subject.label)
         end
+        should "return 'messages_path' with url" do
+          assert_equal("#{subject.resource}_path", subject.url)
+        end
       end
       context "messages show node" do
         setup do
@@ -167,6 +170,9 @@ class ViewNodeTest < Test::Unit::TestCase
 
         should "return ':message_name' with label" do
           assert_equal(":#{subject.resource.to_s.singularize}_name", subject.label)
+        end
+        should "return 'message_path' with url" do
+          assert_equal("#{subject.resource.to_s.singularize}_path(@#{subject.resource.to_s.singularize})", subject.url)
         end
       end
     end

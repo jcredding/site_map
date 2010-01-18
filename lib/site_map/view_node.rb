@@ -27,11 +27,7 @@ module SiteMap
       @label ? @label : self.default_label
     end
     def url
-      if !@url && self.group?
-        self.children.empty? ? @url : self.children.first.url
-      else
-        @url
-      end
+      @url ? @url : self.default_url
     end
     def visible
       @visible ? @visible : 'true'
@@ -78,16 +74,36 @@ module SiteMap
     def default_label
       case(@type)
       when :group
-        @index.to_s.respond_to?(:titleize) ? @index.to_s.titleize : @index.to_s
+        self.titled_index
       when :collection
-        titled_resource = @resource.to_s.respond_to?(:titleize) ? @resource.to_s.titleize : @resource.to_s
-        "#{titled_resource} List"
+        "#{self.titled_resource} List"
       when :member
-        single_resource = @resource.to_s.respond_to?(:singularize) ? @resource.to_s.singularize : @resource.to_s
-        ":#{single_resource}_name"
+        ":#{self.single_resource}_name"
       else
         @index.to_s
       end
+    end
+    def default_url
+      case(@type)
+      when :group
+        self.children.empty? ? @url : self.children.first.url
+      when :collection
+        "#{resource}_path"
+      when :member
+        "#{self.single_resource}_path(@#{self.single_resource})"
+      else
+        @url
+      end
+    end
+
+    def titled_index
+      @titled_index ||= @index.to_s.respond_to?(:titleize) ? @index.to_s.titleize : @index.to_s
+    end
+    def single_resource
+      @single_resource ||= @resource.to_s.respond_to?(:singularize) ? @resource.to_s.singularize : @resource.to_s
+    end
+    def titled_resource
+      @titled_resource ||= @resource.to_s.respond_to?(:titleize) ? @resource.to_s.titleize : @resource.to_s
     end
 
     def view_node_params(new_index, type, options)
