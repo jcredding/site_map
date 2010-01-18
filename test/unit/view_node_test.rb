@@ -159,7 +159,7 @@ class ViewNodeTest < Test::Unit::TestCase
           assert_equal("#{subject.resource.to_s.titleize} List", subject.label)
         end
         should "return 'project_messages_path(@project)' with url" do
-          assert_equal("#{subject.resource}_path", subject.url)
+          assert_equal("project_messages_path(@project)", subject.url)
         end
       end
       context "messages show node" do
@@ -191,8 +191,8 @@ class ViewNodeTest < Test::Unit::TestCase
         should "return 'New message' with label" do
           assert_equal('New message', subject.label)
         end
-        should "return 'new_message_path' with url" do
-          assert_equal('new_message_path', subject.url)
+        should "return 'new_project_message_path(@project)' with url" do
+          assert_equal('new_project_message_path(@project)', subject.url)
         end
       end
       context "messages edit node" do

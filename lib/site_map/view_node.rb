@@ -86,11 +86,11 @@ module SiteMap
     def default_label
       case(@type)
       when :group
-        self.titled_index
+        self.title_string(@index)
       when :collection
-        LABEL_ACTION_TEMPLATES[@action].gsub(':resource', (@action == :new ? self.single_resource : self.titled_resource))
+        self.resource_label((@action == :new ? self.single_string : self.title_string))
       when :member
-        LABEL_ACTION_TEMPLATES[@action].gsub(':resource', self.single_resource)
+        self.resource_label(self.single_string)
       else
         @index.to_s
       end
@@ -100,22 +100,39 @@ module SiteMap
       when :group
         self.children.empty? ? @url : self.children.first.url
       when :collection
-        URL_ACTION_TEMPLATES[@action].gsub(':resource', (@action == :new ? self.single_resource : @resource.to_s))
+        self.resource_url
       when :member
-        URL_ACTION_TEMPLATES[@action].gsub(':resource', self.single_resource)
+        self.resource_url
       else
         @url
       end
     end
 
-    def titled_index
-      @titled_index ||= @index.to_s.respond_to?(:titleize) ? @index.to_s.titleize : @index.to_s
+    def resource_label(resource_text)
+      LABEL_ACTION_TEMPLATES[@action].gsub(':resource', resource_text)
     end
-    def single_resource
-      @single_resource ||= @resource.to_s.respond_to?(:singularize) ? @resource.to_s.singularize : @resource.to_s
+    def resource_url
+      resource_text = if @type == :collection
+        parent_sym = if [:member, :collection].include?(self.parent.type)
+          self.single_string(self.parent.resource)
+        elsif self.parent.type == :group
+          self.parent.index
+        end
+        resource_with_parent = [parent_sym, (@action == :new ? self.single_string : @resource.to_s)].compact.join('_')
+        resourced_url = URL_ACTION_TEMPLATES[@action].gsub(':resource', resource_with_parent)
+        [resourced_url, ("(@#{parent_sym})" if parent_sym)].compact.join
+      else
+        URL_ACTION_TEMPLATES[@action].gsub(':resource', self.single_string)
+      end
     end
-    def titled_resource
-      @titled_resource ||= @resource.to_s.respond_to?(:titleize) ? @resource.to_s.titleize : @resource.to_s
+
+    def single_string(string = nil)
+      string ||= @resource
+      string.to_s.respond_to?(:singularize) ? string.to_s.singularize : string.to_s
+    end
+    def title_string(string = nil)
+      string ||= @resource
+      string.to_s.respond_to?(:titleize) ? string.to_s.titleize : string.to_s
     end
 
     def view_node_params(new_index, type, options)
