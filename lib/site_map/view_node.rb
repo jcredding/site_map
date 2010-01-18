@@ -6,7 +6,19 @@ module SiteMap
     ATTRIBUTES = [ :map, :index, :label, :url, :visible, :resource, :parent, :type ]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
-    TYPES = [ :view, :group ]
+    TYPES = [ :view, :group, :member, :collection ]
+    LABEL_ACTION_TEMPLATES = {
+      :index => ":resource List",
+      :new => "New :resource",
+      :show => "::resource_name",
+      :edit => "Edit ::resource_name"
+    }
+    URL_ACTION_TEMPLATES = {
+      :index => ":resource_path",
+      :new => "new_:resource_path",
+      :show => ":resource_path(@:resource)",
+      :edit => "edit_:resource_path(@:resource)"
+    }
 
     def initialize(index, map, type, options={})
       raise(ArgumentError, "index, map and type arguements required") unless index && map && type
@@ -76,9 +88,9 @@ module SiteMap
       when :group
         self.titled_index
       when :collection
-        "#{self.titled_resource} List"
+        LABEL_ACTION_TEMPLATES[@action].gsub(':resource', (@action == :new ? self.single_resource : self.titled_resource))
       when :member
-        ":#{self.single_resource}_name"
+        LABEL_ACTION_TEMPLATES[@action].gsub(':resource', self.single_resource)
       else
         @index.to_s
       end
@@ -88,9 +100,9 @@ module SiteMap
       when :group
         self.children.empty? ? @url : self.children.first.url
       when :collection
-        "#{resource}_path"
+        URL_ACTION_TEMPLATES[@action].gsub(':resource', (@action == :new ? self.single_resource : @resource.to_s))
       when :member
-        "#{self.single_resource}_path(@#{self.single_resource})"
+        URL_ACTION_TEMPLATES[@action].gsub(':resource', self.single_resource)
       else
         @url
       end

@@ -158,7 +158,7 @@ class ViewNodeTest < Test::Unit::TestCase
         should "return 'Messages List' with label" do
           assert_equal("#{subject.resource.to_s.titleize} List", subject.label)
         end
-        should "return 'messages_path' with url" do
+        should "return 'project_messages_path(@project)' with url" do
           assert_equal("#{subject.resource}_path", subject.url)
         end
       end
@@ -172,7 +172,46 @@ class ViewNodeTest < Test::Unit::TestCase
           assert_equal(":#{subject.resource.to_s.singularize}_name", subject.label)
         end
         should "return 'message_path' with url" do
-          assert_equal("#{subject.resource.to_s.singularize}_path(@#{subject.resource.to_s.singularize})", subject.url)
+          single_resource = subject.resource.to_s.singularize
+          assert_equal("#{single_resource}_path(@#{single_resource})", subject.url)
+        end
+      end
+      context "messages new node" do
+        setup do
+          @view_node = SiteMap[:messages__new]
+        end
+        subject{ @view_node }
+
+        should "not be the index node" do
+          assert_not_equal(SiteMap[:messages__index], subject)
+        end
+        should "be the same as the create node" do
+          assert_equal(SiteMap[:messages__create], subject)
+        end
+        should "return 'New message' with label" do
+          assert_equal('New message', subject.label)
+        end
+        should "return 'new_message_path' with url" do
+          assert_equal('new_message_path', subject.url)
+        end
+      end
+      context "messages edit node" do
+        setup do
+          @view_node = SiteMap[:messages__edit]
+        end
+        subject{ @view_node }
+
+        should "not be the show node" do
+          assert_not_equal(SiteMap[:messages__show], subject)
+        end
+        should "be the same as the update node" do
+          assert_equal(SiteMap[:messages__update], subject)
+        end
+        should "return 'Edit :message_name' with label" do
+          assert_equal('Edit :message_name', subject.label)
+        end
+        should "return 'edit_message_path(@message)' with url" do
+          assert_equal('edit_message_path(@message)', subject.url)
         end
       end
     end

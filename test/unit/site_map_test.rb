@@ -67,7 +67,7 @@ class SiteMapTest < Test::Unit::TestCase
       assert view_node
       project_group_node = SiteMap.view_nodes.detect{|vn| vn.index == :project}
       assert_equal project_group_node, view_node.parent
-      assert_equal [SiteMap[:messages__show]], view_node.children
+      assert_equal [SiteMap[:messages__show], SiteMap[:messages__edit]], view_node.children
     end
   end
 

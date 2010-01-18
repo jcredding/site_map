@@ -3,6 +3,13 @@ module SiteMap
 
     module Mapping
 
+      DEFAULT_ALIAS = {
+        :index => [:new, :create],
+        :new => [:create],
+        :show => [:edit, :update, :destroy],
+        :edit => [:update]
+      }
+
       def group(new_index, options={})
         view_node = self.add_node(new_index, :group, options)
         yield view_node if block_given?
@@ -19,23 +26,28 @@ module SiteMap
       end
 
       def collection(resource, options={})
-        base_index = "#{resource}__:action"
-        new_index = base_index.gsub(':action', 'index').to_sym
-        view_node = self.add_node(new_index, :collection, options.merge({:resource => resource}))
-        [:new, :create].each do |action|
-          action_index = base_index.gsub(':action', action.to_s).to_sym
-          view_node.alias(action_index, new_index)
-        end
+        view_node = self.collection_view(resource, :index, options)
         yield view_node if block_given?
       end
-      def member(resource, options={})
-        base_index = "#{resource}__:action"
-        new_index = base_index.gsub(':action', 'show').to_sym
-        view_node = self.add_node(new_index, :member, options.merge({:resource => resource}))
-        [:edit, :update, :destroy].each do |action|
-          action_index = base_index.gsub(':action', action.to_s).to_sym
-          view_node.alias(action_index, new_index)
+      def collection_view(resource, action, options={})
+        options.merge!({:resource => resource.to_sym, :action => action.to_sym})
+        view_node = self.add_node([resource, action].join('__').to_sym, :collection, options)
+        DEFAULT_ALIAS[action].each do |action|
+          view_node.alias([resource, action].join('__').to_sym, view_node.index)
         end
+        block_given? ? (yield view_node) : view_node
+      end
+      def member(resource, options={})
+        view_node = self.member_view(resource, :show, options)
+        yield view_node if block_given?
+      end
+      def member_view(resource, action, options={})
+        options.merge!({:resource => resource.to_sym, :action => action.to_sym})
+        view_node = self.add_node([resource, action].join('__').to_sym, :member, options)
+        DEFAULT_ALIAS[action].each do |action|
+          view_node.alias([resource, action].join('__').to_sym, view_node.index)
+        end
+        block_given? ? (yield view_node) : view_node
       end
 
       protected
