@@ -20,10 +20,13 @@ This creates a single view in your map that can be found with the index :user. F
 
     SiteMap[:user]
 
-If the a view node with the index :user exists in the site map, then it will return it and can be used as needed.
+If the a view node with the index :user exists in the site map, then it will return it and can be used as needed. SiteMap can also be used to define views in a resource based method. You can define a collection of view node's with the collection method:
+
+    SiteMap.define do |map|
+      map.collection :users
+    end
+
+This defines a single view node with an index of :users__index. It then uses the alias method, to also allow looking up the view node with :users__new and :users_create. SiteMap also defines a member method, which creates a node with :users__show, and alias' :users__edit, :users__update and :users__destroy.
 
 Copyright (c) 2010 John Collin Redding
 See the attached MIT License.
-
-
-

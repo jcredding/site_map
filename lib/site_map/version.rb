@@ -3,7 +3,7 @@ module SiteMap
 
     MAJOR = 0
     MINOR = 2
-    TINY  = 0
+    TINY  = 5
 
     def self.to_s # :nodoc:
       [MAJOR, MINOR, TINY].join('.')
