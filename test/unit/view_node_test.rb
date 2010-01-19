@@ -26,7 +26,7 @@ class ViewNodeTest < Test::Unit::TestCase
     end
 
     # Test initialize method and attribute method's logic
-    should "raise an ArgumentError when no index, map or type is provided" do
+    should "raise an ArgumentError when no index, map or node_type is provided" do
       assert_raises(ArgumentError){ SiteMap::ViewNode.new }
     end
     should "set it's index to :test_node" do

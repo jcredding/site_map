@@ -52,10 +52,10 @@ module SiteMap
 
       protected
 
-      def add_node(new_index, type, options={})
-        view_node = SiteMap::ViewNode.new(*view_node_params(new_index, type, options))
+      def add_node(new_index, node_type, options={})
+        view_node = SiteMap::ViewNode.new(*view_node_params(new_index, node_type, options))
         self.add_to_children(view_node)
-        self.map.add_to_index(new_index, view_node) unless type == :group
+        self.map.add_to_index(new_index, view_node) unless node_type == :group
         view_node
       end
 

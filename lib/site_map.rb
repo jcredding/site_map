@@ -1,5 +1,7 @@
 Dir[File.join(File.dirname(__FILE__), "site_map" ,"*.rb")].each do |file|
-  require File.join('site_map', File.basename(file, ".rb"))
+  unless ['tasks', 'version'].include?(File.basename(file, ".rb"))
+    require File.join('site_map', File.basename(file, ".rb"))
+  end
 end
 
 module SiteMap

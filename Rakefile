@@ -55,9 +55,11 @@ task :gemspec do
   puts "Created gemspec: #{file}"
 end
 
-require 'cucumber'
-require 'cucumber/rake/task'
-
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "test/features --format pretty"
+task :environment do
+  require File.join(File.dirname(__FILE__), 'test', 'test_helper.rb')
+  files_path = File.expand_path(File.join(File.dirname(__FILE__), 'test', 'support', 'config', 'site_map', '*.rb'))
+  files = Dir[files_path].sort
+  SiteMap.setup(files)
 end
+
+load File.join(File.dirname(__FILE__), 'lib', 'site_map', 'tasks', 'view_nodes.rake')

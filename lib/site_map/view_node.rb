@@ -3,7 +3,7 @@ module SiteMap
 
   class ViewNode
     include SiteMap::Helpers::Mapping
-    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :resource, :parent, :type ]
+    ATTRIBUTES = [ :map, :index, :label, :url, :visible, :resource, :parent, :node_type ]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     TYPES = [ :view, :group, :member, :collection ]
@@ -24,11 +24,11 @@ module SiteMap
       :show => BASE_URL_TEMPLATE[:member]
     }
 
-    def initialize(index, map, type, options={})
-      raise(ArgumentError, "index, map and type arguements required") unless index && map && type
+    def initialize(index, map, node_type, options={})
+      raise(ArgumentError, "index, map and node_type arguements required") unless index && map && node_type
       @index = index
       @map = map
-      @type = type
+      @node_type = node_type
       options.each do |method, value|
         instance_variable_set("@#{method}", value)
       end
@@ -47,6 +47,12 @@ module SiteMap
     end
     def visible
       @visible ? @visible : 'true'
+    end
+
+    def aliases
+      @aliases ||= self.map.index_of_nodes.collect do |key, view_node|
+        key if view_node.index == self.index && key != self.index
+      end.compact
     end
 
     def add_to_children(view_node)
@@ -74,12 +80,12 @@ module SiteMap
       @with_siblings ||= self.parent.children
     end
 
-    TYPES.each do |type|
-      self.send(:define_method, "#{type}?", lambda{ self.type == type })
+    TYPES.each do |node_type|
+      self.send(:define_method, "#{node_type}?", lambda{ self.node_type == node_type })
     end
 
     def inspect
-      attributes_string = [:index, :type, :label, :url, :visible].collect do |attribute|
+      attributes_string = [:index, :node_type, :label, :url, :visible].collect do |attribute|
         "#{attribute}: #{self.send(attribute).inspect}"
       end.join(", ")
       "#<#{self.class} #{attributes_string}>"
@@ -88,7 +94,7 @@ module SiteMap
     protected
 
     def default_label
-      case(@type)
+      case(@node_type)
       when :group
         self.title_string(@index)
       when :collection
@@ -100,7 +106,7 @@ module SiteMap
       end
     end
     def default_url
-      case(@type)
+      case(@node_type)
       when :group
         self.children.empty? ? @url : self.children.first.url
       when :collection
@@ -113,18 +119,18 @@ module SiteMap
     end
 
     def resource_label(resource_text)
-      template = (LABEL_ACTION_TEMPLATES[@action] || BASE_LABEL_TEMPLATE[@type])
+      template = (LABEL_ACTION_TEMPLATES[@action] || BASE_LABEL_TEMPLATE[@node_type])
       template.gsub(':action', self.title_string(@action.to_s)).gsub(':resource', resource_text)
     end
     def resource_url
-      resource_text = if @type == :collection
+      resource_text = if @node_type == :collection
         action_str = unless URL_ACTION_TEMPLATES[@action]
           @action.to_s
         end
-        parent_str = if [:member, :collection].include?(self.parent.type)
+        parent_str = if self.parent && [:member, :collection].include?(self.parent.node_type)
           self.single_string(self.parent.resource)
         end
-        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@type])
+        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@node_type])
         resourced_url = [action_str, parent_str, template].flatten.compact.join('_')
         resourced_url = [resourced_url, ("(@#{parent_str})" if parent_str)].compact.join
         resourced_url.gsub(':resource', (@action == :new ? self.single_string : @resource.to_s))
@@ -132,7 +138,7 @@ module SiteMap
         action_str = unless URL_ACTION_TEMPLATES[@action]
           @action.to_s
         end
-        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@type])
+        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@node_type])
         resourced_url = [action_str, template].flatten.compact.join('_')
         resourced_url.gsub(':resource', self.single_string)
       end
@@ -147,8 +153,8 @@ module SiteMap
       string.to_s.respond_to?(:titleize) ? string.to_s.titleize : string.to_s
     end
 
-    def view_node_params(new_index, type, options)
-      [new_index, self.map, type, options.merge(:parent => self)]
+    def view_node_params(new_index, node_type, options)
+      [new_index, self.map, node_type, options.merge(:parent => self)]
     end
 
   end
