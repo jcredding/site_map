@@ -156,7 +156,7 @@ class ViewNodeTest < Test::Unit::TestCase
         subject{ @view_node }
 
         should "return 'Messages List' with label" do
-          assert_equal("#{subject.resource.to_s.titleize} List", subject.label)
+          assert_equal("#{subject.resource.to_s.titleize}", subject.label)
         end
         should "return 'project_messages_path(@project)' with url" do
           assert_equal("project_messages_path(@project)", subject.url)
@@ -212,6 +212,32 @@ class ViewNodeTest < Test::Unit::TestCase
         end
         should "return 'edit_message_path(@message)' with url" do
           assert_equal('edit_message_path(@message)', subject.url)
+        end
+      end
+      context "messages approved node" do
+        setup do
+          @view_node = SiteMap[:messages__approved]
+        end
+        subject{ @view_node }
+
+        should "return 'Approved Messages' with label" do
+          assert_equal('Approved Messages', subject.label)
+        end
+        should "return 'approved_project_messages_path(@project) with url" do
+          assert_equal('approved_project_messages_path(@project)', subject.url)
+        end
+      end
+      context "messages approve node" do
+        setup do
+          @view_node = SiteMap[:messages__approve]
+        end
+        subject{ @view_node }
+
+        should "return 'Approve :message_name' with label" do
+          assert_equal('Approve :message_name', subject.label)
+        end
+        should "return 'approve_message_path(@message)' with url" do
+          assert_equal('approve_message_path(@message)', subject.url)
         end
       end
     end

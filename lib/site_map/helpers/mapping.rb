@@ -32,7 +32,7 @@ module SiteMap
       def collection_view(resource, action, options={})
         options.merge!({:resource => resource.to_sym, :action => action.to_sym})
         view_node = self.add_node([resource, action].join('__').to_sym, :collection, options)
-        DEFAULT_ALIAS[action].each do |action|
+        (DEFAULT_ALIAS[action] || []).each do |action|
           view_node.alias([resource, action].join('__').to_sym, view_node.index)
         end
         block_given? ? (yield view_node) : view_node
@@ -44,7 +44,7 @@ module SiteMap
       def member_view(resource, action, options={})
         options.merge!({:resource => resource.to_sym, :action => action.to_sym})
         view_node = self.add_node([resource, action].join('__').to_sym, :member, options)
-        DEFAULT_ALIAS[action].each do |action|
+        (DEFAULT_ALIAS[action] || []).each do |action|
           view_node.alias([resource, action].join('__').to_sym, view_node.index)
         end
         block_given? ? (yield view_node) : view_node

@@ -7,17 +7,21 @@ module SiteMap
     ATTRIBUTES.each{|attribute| attr_reader attribute }
 
     TYPES = [ :view, :group, :member, :collection ]
+    BASE_LABEL_TEMPLATE = {
+      :collection => ":action :resource",
+      :member => ":action ::resource_name"
+    }
     LABEL_ACTION_TEMPLATES = {
-      :index => ":resource List",
-      :new => "New :resource",
-      :show => "::resource_name",
-      :edit => "Edit ::resource_name"
+      :index => BASE_LABEL_TEMPLATE[:collection].gsub(':action','').strip,
+      :show => BASE_LABEL_TEMPLATE[:member].gsub(':action','').strip
+    }
+    BASE_URL_TEMPLATE = {
+      :collection => [':resource', 'path'],
+      :member => [':resource', 'path(@:resource)']
     }
     URL_ACTION_TEMPLATES = {
-      :index => ":resource_path",
-      :new => "new_:resource_path",
-      :show => ":resource_path(@:resource)",
-      :edit => "edit_:resource_path(@:resource)"
+      :index => BASE_URL_TEMPLATE[:collection],
+      :show => BASE_URL_TEMPLATE[:member]
     }
 
     def initialize(index, map, type, options={})
@@ -109,20 +113,30 @@ module SiteMap
     end
 
     def resource_label(resource_text)
-      LABEL_ACTION_TEMPLATES[@action].gsub(':resource', resource_text)
+      template = (LABEL_ACTION_TEMPLATES[@action] || BASE_LABEL_TEMPLATE[@type])
+      template.gsub(':action', self.title_string(@action.to_s)).gsub(':resource', resource_text)
     end
     def resource_url
       resource_text = if @type == :collection
-        parent_sym = if [:member, :collection].include?(self.parent.type)
+        action_str = unless URL_ACTION_TEMPLATES[@action]
+          @action.to_s
+        end
+        parent_str = if [:member, :collection].include?(self.parent.type)
           self.single_string(self.parent.resource)
         elsif self.parent.type == :group
-          self.parent.index
+          self.parent.index.to_s
         end
-        resource_with_parent = [parent_sym, (@action == :new ? self.single_string : @resource.to_s)].compact.join('_')
-        resourced_url = URL_ACTION_TEMPLATES[@action].gsub(':resource', resource_with_parent)
-        [resourced_url, ("(@#{parent_sym})" if parent_sym)].compact.join
+        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@type])
+        resourced_url = [action_str, parent_str, template].flatten.compact.join('_')
+        resourced_url = [resourced_url, ("(@#{parent_str})" if parent_str)].compact.join
+        resourced_url.gsub(':resource', (@action == :new ? self.single_string : @resource.to_s))
       else
-        URL_ACTION_TEMPLATES[@action].gsub(':resource', self.single_string)
+        action_str = unless URL_ACTION_TEMPLATES[@action]
+          @action.to_s
+        end
+        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@type])
+        resourced_url = [action_str, template].flatten.compact.join('_')
+        resourced_url.gsub(':resource', self.single_string)
       end
     end
 
