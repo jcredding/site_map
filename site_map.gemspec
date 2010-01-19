@@ -2,14 +2,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{site_map}
-  s.version = "0.2.6"
+  s.version = "0.2.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Collin Redding"]
-  s.date = %q{2010-01-18}
+  s.date = %q{2010-01-19}
   s.email = %q{TempestTTU@gmail.com}
   s.extra_rdoc_files = ["README.rdoc"]
-  s.files = ["README.rdoc", "Rakefile", "lib/site_map", "lib/site_map/exceptions.rb", "lib/site_map/helpers", "lib/site_map/helpers/mapping.rb", "lib/site_map/helpers.rb", "lib/site_map/map.rb", "lib/site_map/version.rb", "lib/site_map/view_helpers.rb", "lib/site_map/view_node.rb", "lib/site_map.rb"]
+  s.files = ["README.rdoc", "Rakefile", "lib/site_map", "lib/site_map/exceptions.rb", "lib/site_map/helpers", "lib/site_map/helpers/action_controller.rb", "lib/site_map/helpers/mapping.rb", "lib/site_map/helpers.rb", "lib/site_map/map.rb", "lib/site_map/version.rb", "lib/site_map/view_helpers.rb", "lib/site_map/view_node.rb", "lib/site_map.rb"]
   s.homepage = %q{http://github.com/jcredding/site_map}
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
