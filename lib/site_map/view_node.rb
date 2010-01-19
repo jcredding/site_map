@@ -123,8 +123,6 @@ module SiteMap
         end
         parent_str = if [:member, :collection].include?(self.parent.type)
           self.single_string(self.parent.resource)
-        elsif self.parent.type == :group
-          self.parent.index.to_s
         end
         template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@type])
         resourced_url = [action_str, parent_str, template].flatten.compact.join('_')

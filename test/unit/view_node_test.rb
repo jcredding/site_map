@@ -139,16 +139,6 @@ class ViewNodeTest < Test::Unit::TestCase
         SiteMap.setup(files)
       end
 
-      context "messages group node" do
-        setup do
-          @view_node = SiteMap.view_nodes.detect{|n| n.index == :project }
-        end
-        subject{ @view_node }
-
-        should "return 'Messages' with label" do
-          assert_equal(subject.index.to_s.titleize, subject.label)
-        end
-      end
       context "messages index node" do
         setup do
           @view_node = SiteMap[:messages__index]
