@@ -35,3 +35,6 @@ module SiteMap
 
 end
 SiteMap.setup
+
+ActionView::Base.send(:include, SiteMap::ViewHelpers) if defined?(ActionView::Base)
+ActionController::Base.send(:include, SiteMap::Helpers::ActionController) if defined?(ActionController::Base)
