@@ -2,31 +2,84 @@
 
 == Description
 
-SiteMap provides a way to model out your site's views in a hierarchal fashion. You configure your views and then it builds a tree structure from it that is easy to lookup specific nodes and also traverse their relationships, such as parent or children.
+SiteMap provides a way to model out your site's views in a hierarchal fashion. You configure your views and then it builds a tree structure from it that is easy to lookup specific nodes and also traverse their relationships, such as parents or children.
 
 == Installation
 
-    sudo gem install site_map
+    gem install site_map
 
-== Basic Usage
+== Usage
 
-SiteMap by default looks for "config/site_map.rb" to try and load configurations from. Defining your site map is easy with a syntax similar to Rails routes:
+=== Basic Definition
 
+SiteMap provides a simple syntax for defining a site's views.
+
+    require 'site_map'
     SiteMap.define do |map|
-      map.view :user
+      map.view :home
+      map.view :about
+      map.view :contact
     end
 
-This creates a single view in your map that can be found with the index :user. Finding view node's is easy as well:
+This defines three views home, about and contact. The +view+ method is the most basic way to configure your site map and only requires a unique index as it's first parameter. It simply creates within the site map a view node with the index provided (in this case +home+, +about+ or +contact+).
 
-    SiteMap[:user]
+=== Setting Attributes
 
-If the a view node with the index :user exists in the site map, then it will return it and can be used as needed. SiteMap can also be used to define views in a resource based method. You can define a collection of view node's with the collection method:
+Every site map view node also has a +label+, +url+ and +visible+ attribute. The label is the name of the page the node represents and the url is how you navigate to that page. The visible attribute specifies whether this node should be shown. Using these options is simple:
 
+    require 'site_map'
     SiteMap.define do |map|
-      map.collection :users
+      map.view(:home, {
+        :label => "Home :app_name",
+        :url => "'/home'"
+      })
+      map.view(:about, {
+        :url => "about_path"
+      })
+      map.view(:contact, {
+        :visible => "can_contact?"
+      })
     end
 
-This defines a single view node with an index of :users__index. It then uses the alias method, to also allow looking up the view node with :users__new and :users_create. SiteMap also defines a member method, which creates a node with :users__show, and alias' :users__edit, :users__update and :users__destroy.
+So same basic configuration, but I've added custom options for the previously mentioned attributes. Firstly, url and visible attributes are intended to be eav'd within the view space of an app. This allows you to specify very custom ways to determine a path or check if a node should be shown. Label's are not intended to be eval'd, but are dynamic in a different way, by subbing out symbol names with an options hash, again in the view space. This is explained more and used within site map's view helpers.
+
+Secondly, not every attribute has to be set. By default, a site map's visible is always +true+, and it's url is +nil+. Label also has a default, based on the index. For labels, site map will try to use a +titleize+ method on the string version of it's index. If defined, the titleized string is returned, otherwise just the string version of the index is.
+
+=== Groups and nesting
+
+Site map provides other ways to define nodes and also allows nesting nodes within other nodes.
+
+    require 'site_map'
+    SiteMap.define do |map|
+      map.view :home
+      map.view :about
+      map.group :community do |community_group|
+        community_group.view :forum
+        community_group.view :blog
+      end
+    end
+
+In this definition, we are using a new method +group+. A group node is very similar to a regular view node, and is intended to group similar views. In this case, we have created a group, called community with a blog and forum view as children. A group's definition syntax is the same as a view's, but it has different defaulting logic and behavior within the site map. A group's url will default to it's first child's url, in this case the forum view's url. I'll explain the differences in how a group behaves in the looking up views and traversing the site map sections later.
+
+=== Looking up view node
+
+Enough we defining the site map, on to actually retrieving what's been defined. Assuming the previous definition:
+
+    view_node = SiteMap[:forum]
+    view_node = SiteMap[:community] # => returns nil, can't look up group nodes
+
+Specifying the index of a node will return that view node. When you look up a group node's index, it isn't returned. Group node's are not intended to be looked up, but still exist in the relationships of a view node.
+
+=== View node relationships
+
+After looking up a view node, you can access it's relationships.
+
+  view_node = SiteMap[:forum]
+  view_node.parent                # => returns community group node
+  view_node.siblings              # => returns an array with blog view node in it, [SiteMap[:blog]]
+  view_node.parent.children       # => returns an array with blog and forum view nodes, [SiteMap[:forum], SiteMap[:blog]]
+
+Other relationship methods include +ancestors+, +self_and_siblings+ and +self_and_ancestors+.
 
 Copyright (c) 2010 John Collin Redding
 See the attached MIT License.
