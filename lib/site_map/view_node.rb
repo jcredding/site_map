@@ -144,17 +144,19 @@ module SiteMap
       end
     end
 
-    def single_string(string = nil)
-      string ||= @resource
-      string.to_s.respond_to?(:singularize) ? string.to_s.singularize : string.to_s
+    def single_string(string = @resource)
+      self.format_string(string, :singularize)
     end
-    def title_string(string = nil)
-      string ||= @resource
-      string.to_s.respond_to?(:titleize) ? string.to_s.titleize : string.to_s
+    def title_string(string = @resource)
+      self.format_string(string, :titleize)
     end
 
     def view_node_params(new_index, node_type, options)
       [new_index, self.map, node_type, options.merge(:parent => self)]
+    end
+
+    def format_string(string, format)
+      string.to_s.respond_to?(format) ? string.to_s.send(format) : string.to_s
     end
 
   end

@@ -61,7 +61,7 @@ Site map provides other ways to define nodes and also allows nesting nodes withi
 
 In this definition, we are using a new method +group+. A group node is very similar to a regular view node, and is intended to group similar views. In this case, we have created a group, called community with a blog and forum view as children. A group's definition syntax is the same as a view's, but it has different defaulting logic and behavior within the site map. A group's url will default to it's first child's url, in this case the forum view's url. I'll explain the differences in how a group behaves in the looking up views and traversing the site map sections later.
 
-=== Looking up view node
+=== Looking up a view node
 
 Enough we defining the site map, on to actually retrieving what's been defined. Assuming the previous definition:
 
