@@ -2,7 +2,7 @@ namespace :site_map do
 
   desc 'Print out all defined view nodes based on the current SiteMap configuration'
   task :nodes => :environment do
-    index_length = SiteMap.map.index_of_nodes.collect{|key, value| key.inspect.length}.max
+    index_length = SiteMap.map.index_of_nodes.collect{|key, value| key.inspect.length}.max + 1
     index_length += (SiteMap.map.index_of_nodes.collect{|key, value| value.ancestors.size}.max * 2)
     label_length = SiteMap.map.index_of_nodes.collect{|key, value| value.label.inspect.length}.max
     url_length = SiteMap.map.index_of_nodes.collect{|key, value| value.url.inspect.length}.max
