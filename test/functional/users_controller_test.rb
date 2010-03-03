@@ -12,6 +12,8 @@ class UsersController < ApplicationController
 
   def index
   end
+  def new
+  end
   def show
     @user = 'Joe'
     render(:action => :index)
@@ -43,6 +45,17 @@ class UsersControllerTest < ActionController::TestCase
       should_assign_to :view_node
       should "return the view node's label, url and visibility in the index html response" do
         assert_equal('User List => /users => visible', @controller.response.body.strip)
+      end
+    end
+    context "on GET to :new" do
+      setup{ get(:new) }
+
+      should_assign_to :view_node
+      should "assign the index view node" do
+        assert_equal(SiteMap[:users__index], assigns(:view_node))
+      end
+      should "return the display_title helper output, 'Users > New'" do
+        assert_equal("Users > User List", @controller.response.body.strip)
       end
     end
     context "on GET to :show" do
