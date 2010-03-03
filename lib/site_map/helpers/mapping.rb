@@ -31,9 +31,9 @@ module SiteMap
       end
       def collection_view(resource, action, options={})
         options.merge!({:resource => resource.to_sym, :action => action.to_sym})
-        view_node = self.add_node([resource, action].join('__').to_sym, :collection, options)
+        view_node = self.add_node(self.index_for(resource, action), :collection, options)
         (DEFAULT_ALIAS[action] || []).each do |action|
-          view_node.alias([resource, action].join('__').to_sym, view_node.index)
+          view_node.alias(self.index_for(resource, action), view_node.index)
         end
         block_given? ? (yield view_node) : view_node
       end
@@ -43,14 +43,18 @@ module SiteMap
       end
       def member_view(resource, action, options={})
         options.merge!({:resource => resource.to_sym, :action => action.to_sym})
-        view_node = self.add_node([resource, action].join('__').to_sym, :member, options)
+        view_node = self.add_node(self.index_for(resource, action), :member, options)
         (DEFAULT_ALIAS[action] || []).each do |action|
-          view_node.alias([resource, action].join('__').to_sym, view_node.index)
+          view_node.alias(self.index_for(resource, action), view_node.index)
         end
         block_given? ? (yield view_node) : view_node
       end
 
       protected
+
+      def index_for(resource, action)
+        [resource, action].join('__').to_sym
+      end
 
       def add_node(new_index, node_type, options={})
         view_node = SiteMap::ViewNode.new(*view_node_params(new_index, node_type, options))

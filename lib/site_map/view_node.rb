@@ -65,7 +65,7 @@ module SiteMap
     def ancestors
       unless @ancestors
         node, @ancestors = self, []
-        @ancestors << node = node.parent while node.parent
+        @ancestors << node = node_parent while (node_parent = node.parent)
         @ancestors.reverse!
       end
       @ancestors
@@ -123,22 +123,18 @@ module SiteMap
       template.gsub(':action', self.title_string(@action.to_s)).gsub(':resource', resource_text)
     end
     def resource_url
+      action_str = unless (action_template = URL_ACTION_TEMPLATES[@action])
+        @action.to_s
+      end
+      template = (action_template || BASE_URL_TEMPLATE[@node_type])
       resource_text = if @node_type == :collection
-        action_str = unless URL_ACTION_TEMPLATES[@action]
-          @action.to_s
-        end
         parent_str = if self.parent && [:member, :collection].include?(self.parent.node_type)
           self.single_string(self.parent.resource)
         end
-        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@node_type])
         resourced_url = [action_str, parent_str, template].flatten.compact.join('_')
         resourced_url = [resourced_url, ("(@#{parent_str})" if parent_str)].compact.join
         resourced_url.gsub(':resource', (@action == :new ? self.single_string : @resource.to_s))
       else
-        action_str = unless URL_ACTION_TEMPLATES[@action]
-          @action.to_s
-        end
-        template = (URL_ACTION_TEMPLATES[@action] || BASE_URL_TEMPLATE[@node_type])
         resourced_url = [action_str, template].flatten.compact.join('_')
         resourced_url.gsub(':resource', self.single_string)
       end
@@ -156,7 +152,7 @@ module SiteMap
     end
 
     def format_string(string, format)
-      string.to_s.respond_to?(format) ? string.to_s.send(format) : string.to_s
+      (string = string.to_s).respond_to?(format) ? string.send(format) : string
     end
 
   end

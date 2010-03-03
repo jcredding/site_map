@@ -6,15 +6,19 @@ end
 
 module SiteMap
 
+  DEFAULT_FILE = File.join('config', 'site_map.rb')
+
   def self.setup(*files)
     files = files.first if files.first.is_a?(Array)
-    files << File.join('config', 'site_map.rb') if files.empty?
+    files << DEFAULT_FILE if files.empty?
+    self.logger = Rails.logger if defined?(Rails)
     @@map ||= SiteMap::Map.new
     @@map.clear_nodes!
     files.each do |file|
       begin
         load file
       rescue LoadError => exception
+        self.logger.info("SiteMap config file: #{file} could not be loaded.") unless file == DEFAULT_FILE
       end
     end
   end
@@ -33,6 +37,13 @@ module SiteMap
 
   def self.define(&block)
     yield @@map
+  end
+
+  def self.logger
+    @@logger ||= Logger.new(STDOUT)
+  end
+  def self.logger=(new_logger)
+    @@logger = new_logger
   end
 
 end
