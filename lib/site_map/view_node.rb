@@ -65,7 +65,7 @@ module SiteMap
     def ancestors
       unless @ancestors
         node, @ancestors = self, []
-        @ancestors << node = node_parent while (node_parent = node.parent)
+        @ancestors << node = node.parent while node.parent
         @ancestors.reverse!
       end
       @ancestors
