@@ -41,12 +41,22 @@ class ViewNodeTest < Test::Unit::TestCase
       assert_nil subject[:url]
       assert_nil subject[:visible]
     end
-    should "return the index as a string" do
-      assert_equal subject.index.to_s, subject.label
+
+    should "provide a logical default label" do
+      assert_equal "Test Node", subject.label
     end
+
+    should "provide a logical default url" do
+      assert_equal "/test-node", subject.url
+    end
+
     should "return 'true' with visible" do
       assert_equal 'true', subject.visible
     end
+    # KDR: a future fix for issue #4
+    #should "provide a logical default visible setting" do
+    #  asset_equal true, subject.visible
+    #end
 
     # Test initialize method with attributes being set
     context "initialized with options" do

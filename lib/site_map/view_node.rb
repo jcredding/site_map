@@ -102,7 +102,7 @@ module SiteMap
       when :member
         self.resource_label(self.single_string)
       else
-        @index.to_s
+        @index.to_s.titleize
       end
     end
     def default_url
@@ -114,7 +114,7 @@ module SiteMap
       when :member
         self.resource_url
       else
-        @url
+        "/#{@index.to_s.underscore.dasherize}"
       end
     end
 
