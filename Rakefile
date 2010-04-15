@@ -17,7 +17,7 @@ spec = Gem::Specification.new do |s|
   s.files            = %w(README.rdoc Rakefile) + Dir.glob("{lib}/**/*")
   # s.executables    = ['site_map']
 
-  # s.add_dependency('gem_name', '~> 0.0.1')
+  s.add_development_dependency("shoulda", [">= 2.10.2"])
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
