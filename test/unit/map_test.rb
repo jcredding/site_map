@@ -16,7 +16,7 @@ class MapTest < Test::Unit::TestCase
 
       # Test attributes, base respond_to?, not the logic in the methods
       [ SiteMap::Map::ATTRIBUTES,
-        [ :group, :view, :find, :add_to_children, :add_to_index, :map, :view_node_params ]
+        [ :views, :group, :view, :find, :add_to_children, :add_to_index, :map, :view_node_params ]
       ].flatten.each do |attribute|
         should "respond to #{attribute}" do
           assert subject.respond_to?(attribute)

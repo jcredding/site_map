@@ -5,6 +5,7 @@ module SiteMap
     include SiteMap::Helpers::Mapping
     ATTRIBUTES = [:view_nodes, :index_of_nodes]
     ATTRIBUTES.each{|attribute| attr_reader attribute }
+    alias_method :views, :view_nodes
 
     def initialize
       self.clear_nodes!
