@@ -54,6 +54,7 @@ module SiteMap
         !!@visible
       end
     end
+    alias_method :visible?, :visible
 
     def aliases
       @aliases ||= self.map.index_of_nodes.collect do |key, view_node|

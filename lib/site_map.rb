@@ -33,6 +33,10 @@ module SiteMap
       self.map.view_nodes
     end
     alias_method :views, :view_nodes
+    
+    def visible_views
+      self.map.visible_views
+    end
 
     def map
       @@map

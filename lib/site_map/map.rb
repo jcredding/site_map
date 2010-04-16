@@ -35,6 +35,12 @@ module SiteMap
     def inspect
       "#<#{self.class}>"
     end
+    
+    def visible_views
+      @view_nodes.select do |view|
+        view.visible?
+      end
+    end
 
     protected
 

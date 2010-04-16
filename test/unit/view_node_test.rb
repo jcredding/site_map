@@ -16,7 +16,7 @@ class ViewNodeTest < Test::Unit::TestCase
 
     # Test attributes, base respond_to?, not the logic in the methods
     [ SiteMap::ViewNode::ATTRIBUTES,
-      [ :view?, :group? ],
+      [ :visible?, :view?, :group? ],
       [ :children, :ancestors, :self_and_ancestors, :siblings, :self_and_siblings ],
       [ :view_node_params, :[] ]
     ].flatten.each do |attribute|
