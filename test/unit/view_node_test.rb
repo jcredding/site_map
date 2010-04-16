@@ -47,7 +47,7 @@ class ViewNodeTest < Test::Unit::TestCase
     end
 
     should "provide a logical default url" do
-      assert_equal "/test-node", subject.url
+      assert_equal "/test_node", subject.url
     end
 
     should "return 'true' with visible" do

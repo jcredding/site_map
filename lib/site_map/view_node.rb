@@ -102,14 +102,12 @@ module SiteMap
 
     def default_label
       case(@node_type)
-      when :group
-        self.title_string(@index)
       when :collection
         self.resource_label((@action == :new ? self.single_string : self.title_string))
       when :member
         self.resource_label(self.single_string)
       else
-        @index.to_s.titleize
+        self.title_string(@index)
       end
     end
     def default_url
@@ -121,7 +119,7 @@ module SiteMap
       when :member
         self.resource_url
       else
-        "/#{@index.to_s.underscore.dasherize}"
+        "/#{@index.to_s.downcase.gsub(/[^a-z0-9\-_\+]+/, '-')}"
       end
     end
 

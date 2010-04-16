@@ -12,7 +12,7 @@ SiteMap provides a way to model out your site's views in a hierarchal fashion. Y
 
 === Basic Definition
 
-SiteMap provides a simple syntax for defining a site's views. Add the following to +config/site_map.rb+ (site_map will load this when required) or an initializer for your app: 
+SiteMap provides a simple syntax for defining a site's views. Add the following to +config/site_map.rb+ (site_map will load this when required) or an initializer for your app:
 
     require 'site_map'
     SiteMap.define do |map|
