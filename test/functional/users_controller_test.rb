@@ -18,6 +18,8 @@ class UsersController < ApplicationController
     @user = 'Joe'
     render(:action => :index)
   end
+  def edit
+  end
 
   protected
 
@@ -64,6 +66,15 @@ class UsersControllerTest < ActionController::TestCase
       should_assign_to :view_node
       should "return the view node's label, url and visibility in the show html response" do
         assert_equal('User Joe => /users/1 => invisible', @controller.response.body.strip)
+      end
+    end
+    context "on GET to :edit" do
+      setup{ get(:edit) }
+
+      should_assign_to :view_node
+      should "return the display_crumbs helper output" do
+        correct_response = "<a class=\"breadcrumb\" href=\"/users\">Users</a><span> > </span><a class=\"breadcrumb\" href=\"/users\">User List</a><span> > </span><a class=\"breadcrumb\" href=\"/users/1\">User </a>"
+        assert_equal(correct_response, @controller.response.body.strip)
       end
     end
   end
