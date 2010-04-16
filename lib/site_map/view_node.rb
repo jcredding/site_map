@@ -46,7 +46,13 @@ module SiteMap
       @url ? @url : self.default_url
     end
     def visible
-      @visible ? @visible : 'true'
+      if @visible.nil?
+        true
+      elsif @visible.kind_of?(::String)
+        @visible
+      else
+        !!@visible
+      end
     end
 
     def aliases

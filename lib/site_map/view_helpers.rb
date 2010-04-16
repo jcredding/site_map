@@ -18,7 +18,7 @@ module SiteMap
       eval(view_node.url)
     end
     def view_node_visible(view_node)
-      eval(view_node.visible)
+      eval(view_node.visible.to_s)
     end
     alias :view_node_visible? :view_node_visible
 

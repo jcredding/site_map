@@ -51,12 +51,8 @@ class ViewNodeTest < Test::Unit::TestCase
     end
 
     should "return 'true' with visible" do
-      assert_equal 'true', subject.visible
+      assert_equal true, subject.visible
     end
-    # KDR: a future fix for issue #4
-    #should "provide a logical default visible setting" do
-    #  asset_equal true, subject.visible
-    #end
 
     # Test initialize method with attributes being set
     context "initialized with options" do
@@ -83,6 +79,32 @@ class ViewNodeTest < Test::Unit::TestCase
       end
       should "return true with view?" do
         assert subject.view?
+      end
+    end
+
+    context "initialized with explicit true visible option" do
+      setup do
+        @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, :view, {
+          :visible => true
+        })
+      end
+      subject{ @view_node }
+
+      should "honor the option" do
+        assert_equal true, subject.visible
+      end
+    end
+
+    context "initialized with explicit false visible option" do
+      setup do
+        @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, :view, {
+          :visible => false
+        })
+      end
+      subject{ @view_node }
+
+      should "honor the option" do
+        assert_equal false, subject.visible
       end
     end
 
