@@ -80,12 +80,24 @@ module SiteMap
     def self_and_ancestors
       @with_ancestors ||= self.ancestors.dup.push(self)
     end
+    alias_method :sna, :self_and_ancestors
     def siblings
       @siblings ||= (self.self_and_siblings - [self])
     end
     def self_and_siblings
       @with_siblings ||= self.parent.children
     end
+    alias_method :sns, :self_and_siblings
+    def previous_sibling
+      sns[sns.index(self)-1]
+    end
+    alias_method :previous_view, :previous_sibling
+    alias_method :prev, :previous_sibling
+    def next_sibling
+      sns[(idx = sns.index(self)+1) == sns.length ? 0 : idx]
+    end
+    alias_method :next_view, :next_sibling
+    alias_method :next, :next_sibling
 
     TYPES.each do |node_type|
       self.send(:define_method, "#{node_type}?", lambda{ self.node_type == node_type })
