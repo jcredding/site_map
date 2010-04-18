@@ -17,7 +17,10 @@ class ViewNodeTest < Test::Unit::TestCase
     # Test attributes, base respond_to?, not the logic in the methods
     [ SiteMap::ViewNode::ATTRIBUTES,
       [ :visible?, :view?, :group? ],
-      [ :children, :ancestors, :self_and_ancestors, :siblings, :self_and_siblings ],
+      [ :children, :ancestors, :self_and_ancestors, :sna],
+      [ :siblings, :self_and_siblings, :sns ],
+      [ :previous_sibling, :previous_view, :prev],
+      [ :next_sibling, :next_view, :next],
       [ :view_node_params, :[] ]
     ].flatten.each do |attribute|
       should "respond to #{attribute}" do
@@ -117,7 +120,7 @@ class ViewNodeTest < Test::Unit::TestCase
         assert_equal SiteMap.map.view_nodes.first, subject.parent
       end
       should "return about_movies and about_monsters with children" do
-        children_should_be = [SiteMap[:about_movies], SiteMap[:about_monsters]]
+        children_should_be = [SiteMap[:about_movies], SiteMap[:about_monsters], SiteMap[:about_rodan]]
         assert_equal children_should_be, subject.children
       end
       should "return godzilla_links node with siblings" do
@@ -162,6 +165,22 @@ class ViewNodeTest < Test::Unit::TestCase
         assert_raises(SiteMap::Exceptions::NonExistantViewNode) do
           SiteMap.define{|map| map.alias(:wont_work, :doesnt_exist) }
         end
+      end
+    end
+    context "with siblings" do
+      setup do
+        @view1 = SiteMap[:about_movies]
+        @view2 = SiteMap[:about_monsters]
+        @view3 = SiteMap[:about_rodan]
+      end
+      
+      should "be able to cycle to it's previous and next views" do
+        assert_equal @view3, @view1.previous_sibling
+        assert_equal @view2, @view1.next_sibling
+        assert_equal @view1, @view2.previous_view
+        assert_equal @view3, @view2.next_view
+        assert_equal @view2, @view3.prev
+        assert_equal @view1, @view3.next
       end
     end
     context "from the multiple file set testing smart defaults" do
