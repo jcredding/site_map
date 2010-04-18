@@ -69,6 +69,7 @@ module SiteMap
     def children
       @view_nodes
     end
+    alias_method :views, :children
     def ancestors
       unless @ancestors
         node, @ancestors = self, []
