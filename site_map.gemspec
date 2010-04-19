@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{site_map}
-  s.version = "0.3.1"
+  s.version = "0.3.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Collin Redding"]
-  s.date = %q{2010-04-16}
+  s.date = %q{2010-04-19}
   s.email = %q{TempestTTU@gmail.com}
   s.extra_rdoc_files = ["README.rdoc"]
   s.files = ["README.rdoc", "Rakefile", "lib/site_map", "lib/site_map/exceptions.rb", "lib/site_map/helpers", "lib/site_map/helpers/action_controller.rb", "lib/site_map/helpers/mapping.rb", "lib/site_map/helpers.rb", "lib/site_map/map.rb", "lib/site_map/tasks", "lib/site_map/tasks/view_nodes.rake", "lib/site_map/tasks.rb", "lib/site_map/version.rb", "lib/site_map/view_helpers.rb", "lib/site_map/view_node.rb", "lib/site_map.rb"]
