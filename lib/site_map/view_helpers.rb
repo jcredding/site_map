@@ -15,7 +15,7 @@ module SiteMap
       label_string
     end
     def view_node_url(view_node)
-      eval(view_node.url)
+      eval(view_node.url.to_s)
     end
     def view_node_visible(view_node)
       eval(view_node.visible.to_s)
