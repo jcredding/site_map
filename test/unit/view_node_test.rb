@@ -51,7 +51,7 @@ class ViewNodeTest < Test::Unit::TestCase
     end
 
     should "provide a logical default url" do
-      assert_equal "/test_node", subject.url
+      assert_equal "/test-node", subject.url
     end
 
     should "return 'true' with visible" do
@@ -174,7 +174,7 @@ class ViewNodeTest < Test::Unit::TestCase
         @view2 = SiteMap[:about_monsters]
         @view3 = SiteMap[:about_rodan]
       end
-      
+
       should "be able to cycle to it's previous and next views" do
         assert_equal @view3, @view1.previous_sibling
         assert_equal @view2, @view1.next_sibling
