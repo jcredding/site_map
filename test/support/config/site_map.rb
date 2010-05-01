@@ -8,4 +8,8 @@ SiteMap.define do |map|
     godzilla.view :godzilla_links, :url => "'/godzilla/links'"
     godzilla.alias :godzilla_urls, :godzilla_links
   end
+
+  map.view :nested do |nested|
+    nested.view :awesomeness
+  end
 end

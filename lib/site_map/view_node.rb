@@ -132,7 +132,7 @@ module SiteMap
       when :member
         self.resource_url
       else
-        "/#{@index.to_s.downcase.gsub(/[^a-z0-9\-\+]+/, '-')}"
+        "#{parent.url if parent}/#{@index.to_s.downcase.gsub(/[^a-z0-9\-\+]+/, '-')}"
       end
     end
 

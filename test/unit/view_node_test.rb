@@ -6,6 +6,7 @@ class ViewNodeTest < Test::Unit::TestCase
     setup do
       SiteMap.setup
       @view_node = SiteMap::ViewNode.new(:test_node, SiteMap.map, :view)
+      @nested_view_node = SiteMap[:awesomeness]
     end
     subject{ @view_node }
 
@@ -52,6 +53,7 @@ class ViewNodeTest < Test::Unit::TestCase
 
     should "provide a logical default url" do
       assert_equal "/test-node", subject.url
+      assert_equal "/nested/awesomeness", @nested_view_node.url
     end
 
     should "return 'true' with visible" do
