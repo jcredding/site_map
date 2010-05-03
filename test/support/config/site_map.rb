@@ -12,4 +12,8 @@ SiteMap.define do |map|
   map.view :nested do |nested|
     nested.view :awesomeness
   end
+
+  map.view :sneaky, :url => '/' do |nested|
+    nested.view :nested
+  end
 end
