@@ -1,75 +1,46 @@
-require File.join('test', 'test_helper')
+require 'test/helper'
 
 class SiteMapTest < Test::Unit::TestCase
 
-  context "SiteMap module" do
-    setup{ SiteMap.setup }
-    subject{ SiteMap }
-
-    [:define, :setup, :[], :view_nodes, :views, :visible_views].each do |method|
-      should "respond to #{method}" do
-        assert subject.respond_to?(method)
-      end
-    end
-
-    context "define method" do
-      setup{ SiteMap.define{|map| @map = map} }
-      subject{ @map }
-
-      should "yield it's map to given block" do
-        assert subject.kind_of?(SiteMap::Map)
-      end
-    end
-
-    should "proxy map.find with []" do
-      assert_equal SiteMap.map.find(:godzilla_links), SiteMap[:godzilla_links]
-    end
-    should "proxy map view_nodes with view_nodes" do
-      assert_equal SiteMap.map.view_nodes, SiteMap.view_nodes
-    end
+  def setup
+    @subject = SiteMap
+    @config = @subject.send(:config)
   end
 
-  context "SiteMap setup with multiple, non-default files" do
-    setup do
-      files_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'support', 'config', 'site_map', '*.rb'))
-      files = Dir[files_path].sort
-      SiteMap.setup(files)
-    end
-    subject{ SiteMap }
+  # SiteMap.build
+  def test_should_have_build_method
+    assert @subject.respond_to?(:build)
+  end
 
-    # check member / collection methods defining
-    [ [:index, [:new, :create]],
-      [:show, [:edit, :update, :destroy]]
-    ].each do |action_and_alias|
-      action_and_alias.flatten.each do |action|
-        should "define 'users__#{action}' indexed node" do
-          action_index = "users__#{action}".to_sym
-          assert (view_node = SiteMap[action_index])
-        end
-      end
-      action_and_alias.last.each do |action|
-        should "should return the 'users__#{action_and_alias.first}' with 'users__#{action}'" do
-          action_index = "users__#{action}".to_sym
-          assert (view_node = SiteMap[action_index])
-          assert_not_equal action_index, view_node.index
-          assert_equal "users__#{action_and_alias.first}".to_sym, view_node.index
-        end
-      end
-    end
+  def test_build_should_load_the_definition_file
+    path = File.expand_path("../../support/build_test_site_map.rb", __FILE__)
+    @config.definition_file = Pathname.new(path)
 
-    should "contain users site map configuration" do
-      view_node = SiteMap[:users__index]
-      assert view_node
-      user_group_node = SiteMap.view_nodes.detect{|vn| vn.index == :users}
-      assert_equal user_group_node, view_node.parent
-      assert_equal [SiteMap[:users__show]], view_node.children
-      view_node = SiteMap[:messages__index]
-      assert view_node
-      project_index_node = SiteMap[:projects__index]
-      assert_equal project_index_node, view_node.parent
-      expected_children = [SiteMap[:messages__show], SiteMap[:messages__edit], SiteMap[:messages__approve]]
-      assert_equal expected_children, view_node.children
-    end
+    assert File.exists?(@config.definition_file)
+    assert !defined?(SITEMAP_LOADED)
+    assert_nothing_raised{ @subject.build }
+    assert !!defined?(SITEMAP_LOADED) && SITEMAP_LOADED
+  end
+
+  def test_build_should_not_raise_a_load_error
+    assert !File.exists?(@config.definition_file)
+    assert_nothing_raised{ @subject.build }
+  end
+
+  # SiteMap.define
+  def test_should_have_define_method
+    assert @subject.respond_to?(:define)
+  end
+
+  def test_define_should_require_a_block
+    assert_raises(ArgumentError){ @subject.define }
+  end
+
+  # need to reset the SiteMap
+  def teardown
+    @subject.instance_variable_set("@map", nil)
+    @subject.instance_variable_set("@config", nil)
+    @subject.instance_variable_set("@builder", nil)
   end
 
 end
